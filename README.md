@@ -1,2 +1,2 @@
 # classification
-patient_survival_predictions
+patient_survival_prediction
