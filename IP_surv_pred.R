@@ -38,7 +38,7 @@ table(ip_data$ethnicity)
 
 #Gender
 ip_data$gender <- ifelse(ip_data$gender == "M", 1, 
-                            ifelse(ip_data$gender == "F", 2, NA))
+                            ifelse(ip_data$gender == "F", 0, NA))
                                    
 #icu_admit_score
 ip_data$icu_admit_source <- ifelse(ip_data$icu_admit_source == "Accident & Emergency", 1, 
@@ -103,6 +103,44 @@ ip_data$hospital_death <- fct_relevel(ip_data$hospital_death, "death", "no_death
 "As column 84 -'X' does not have any value, it can be removed along with 'id' columns"
 ip_data <- ip_data %>%
               select(-c(X,encounter_id, patient_id,hospital_id, icu_id))
+
+
+#Explanatory Data Analysis (EDA)
+
+#Missing Values
+sum(is.na(ip_data))
+
+#Class distribution
+table(ip_data$hospital_death)
+
+"death - 7915
+ no_death - 83798"
+
+#Hist for labeled class
+ggplot(ip_data, aes(y = hospital_death)) + 
+  geom_bar(aes(fill = hospital_death)) +
+  xlab("Hospital Death") +
+  ylab("Count") +
+  theme(legend.position = "top")
+
+"Class is unbalanced"
+
+"Analysing the binary valued columns"
+bin <- c("elective_surgery", "gender", "apache_post_operative", 
+         "arf_apache","gcs_unable_apache", "intubated_apache",
+         "ventilated_apache", "aids", "cirrhosis", "diabetes_mellitus",
+         "hepatic_failure", "immunosuppression", "leukemia",
+         "lymphoma", "solid_tumor_with_metastasis")
+
+#For proportion of death and no_death of BINARY VARIABLES
+prop = aggregate(x = ip_data[,bin],
+                 by = list(ip_data$hospital_death),
+                 FUN = sum)
+
+prop[1, 2:16] <- prop[1, 2:16] / sum(ip_data$hospital_death == 'death')
+prop[2, 2:16] <- prop[2, 2:16] / sum(ip_data$hospital_death == 'no_death')
+prop
+
 
 
 
