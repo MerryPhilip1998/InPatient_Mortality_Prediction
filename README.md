@@ -1,2 +1,2 @@
 # Patient Survival Prediction
-patient_survival_prediction
+Prediction model for all-cause in-hospital mortality among admitted patients.
